@@ -14,3 +14,5 @@ curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/
 
 apt update && apt install cri-o cri-o-runc -y
 
+### https://www.linuxtechi.com/install-crio-container-runtime-on-ubuntu/
+
