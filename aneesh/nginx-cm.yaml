@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginxapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mydep
+  template:
+    metadata:
+      labels:
+        app: mydep
+    spec:
+      containers:
+      - name: con1
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: myvol
+          mountPath: /usr/share/nginx/html/
+      volumes:
+      - name: myvol
+        configMap:
+          name: nginxapp   
+   
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mydep-svc
+spec:
+  type: NodePort
+  selector:
+    app: mydep
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30123
+

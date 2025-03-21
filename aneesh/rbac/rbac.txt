@@ -1,0 +1,172 @@
+Kbernetes Resource 
+
+1. Namespace Based
+2. Non Namespace Based
+
+1. Namespace Based
+root@server:~# kubectl api-resources --namespaced=true
+NAME                        SHORTNAMES     APIVERSION                     NAMESPACED   KIND
+bindings                                   v1                             true         Binding
+configmaps                  cm             v1                             true         ConfigMap
+endpoints                   ep             v1                             true         Endpoints
+events                      ev             v1                             true         Event
+limitranges                 limits         v1                             true         LimitRange
+persistentvolumeclaims      pvc            v1                             true         PersistentVolumeClaim
+pods                        po             v1                             true         Pod
+podtemplates                               v1                             true         PodTemplate
+replicationcontrollers      rc             v1                             true         ReplicationController
+resourcequotas              quota          v1                             true         ResourceQuota
+secrets                                    v1                             true         Secret
+serviceaccounts             sa             v1                             true         ServiceAccount
+services                    svc            v1                             true         Service
+controllerrevisions                        apps/v1                        true         ControllerRevision
+daemonsets                  ds             apps/v1                        true         DaemonSet
+deployments                 deploy         apps/v1                        true         Deployment
+replicasets                 rs             apps/v1                        true         ReplicaSet
+statefulsets                sts            apps/v1                        true         StatefulSet
+
+
+
+2. Non Namespace Based
+root@server:~# kubectl api-resources --namespaced=false
+NAME                               SHORTNAMES                          APIVERSION                             NAMESPACED   KIND
+componentstatuses                  cs                                  v1                                     false        ComponentStatus
+namespaces                         ns                                  v1                                     false        Namespace
+nodes                              no                                  v1                                     false        Node
+persistentvolumes                  pv                                  v1                                     false        PersistentVolume
+mutatingwebhookconfigurations                                          admissionregistration.k8s.io/v1        false        MutatingWebhookConfiguration
+validatingwebhookconfigurations                                        admissionregistration.k8s.io/v1        false        ValidatingWebhookConfiguration
+customresourcedefinitions          crd,crds                            apiextensions.k8s.io/v1                false        CustomResourceDefinition
+apiservices                                                            apiregistration.k8s.io/v1              false        APIService
+csidrivers                                                             storage.k8s.io/v1                      false        CSIDriver
+csinodes                                                               storage.k8s.io/v1                      false        CSINode
+storageclasses                     sc                                  storage.k8s.io/v1                      false        StorageClass
+volumeattachments                                                      storage.k8s.io/v1                      false        VolumeAttachment
+
+
+Create Role and role binding 
+Create role 
+  kubectl -n jenkins create role jenkins-role --verb get,edit,delete,list --resource=pod,configmap,deployment,replicaset
+
+## specific resource mango and apple 
+kubectl -n devops create role test --resource=pods,deployments --verb=get,list,create,delete --resource-name mango apple
+
+Create rolebinding
+  kubectl -n jenkins create rolebinding jenkinsrb --role=jenkins-role --user=aneesh --dry-run=client -o yaml
+  kubectl -n jenkins create rolebinding jenkinsrb --role=jenkins-role --user=aneesh
+List Role and RoleBinding 
+  kubectl get role -n jenkins
+  kubectl get rolebindings.rbac.authorization.k8s.io -n jenkins
+Test User Permission
+  kubectl -n jenkins auth can-i create pod --as aneesh
+  kubectl -n jenkins auth can-i get pod --as aneesh
+
+
+User Account types
+
+Service Accounts
+
+Normal User ( Crt + Key )
+
+Create Key and CSR
+
+openssl genrsa -out aneesh.key 2048
+openssl req -new -key aneesh.key -out aneesh.csr
+
+decode aneesh.csr
+
+cat aneesh.csr | base64 -w 0
+copy these content to below CSR request
+
+
+create certificate signing request
+vi csr.yaml
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: aneesh
+spec:
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1ZqQ0NBVDRDQVFBd0VURVBNQTBHQTFVRUF3d0dZVzVuWld4aE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRgpBQU9DQVE4QU1JSUJDZ0tDQVFFQTByczhJTHRHdTYxakx2dHhWTTJSVlRWMDNHWlJTWWw0dWluVWo4RElaWjBOCnR2MUZtRVFSd3VoaUZsOFEzcWl0Qm0wMUFSMkNJVXBGd2ZzSjZ4MXF3ckJzVkhZbGlBNVhwRVpZM3ExcGswSDQKM3Z3aGJlK1o2MVNrVHF5SVBYUUwrTWM5T1Nsbm0xb0R2N0NtSkZNMUlMRVI3QTVGZnZKOEdFRjJ6dHBoaUlFMwpub1dtdHNZb3JuT2wzc2lHQ2ZGZzR4Zmd4eW8ybmlneFNVekl1bXNnVm9PM2ttT0x1RVF6cXpkakJ3TFJXbWlECklmMXBMWnoyalVnald4UkhCM1gyWnVVV1d1T09PZnpXM01LaE8ybHEvZi9DdS8wYk83c0x0MCt3U2ZMSU91TFcKcW90blZtRmxMMytqTy82WDNDKzBERHk5aUtwbXJjVDBnWGZLemE1dHJRSURBUUFCb0FBd0RRWUpLb1pJaHZjTgpBUUVMQlFBRGdnRUJBR05WdmVIOGR4ZzNvK21VeVRkbmFjVmQ1N24zSkExdnZEU1JWREkyQTZ1eXN3ZFp1L1BVCkkwZXpZWFV0RVNnSk1IRmQycVVNMjNuNVJsSXJ3R0xuUXFISUh5VStWWHhsdnZsRnpNOVpEWllSTmU3QlJvYXgKQVlEdUI5STZXT3FYbkFvczFqRmxNUG5NbFpqdU5kSGxpT1BjTU1oNndLaTZzZFhpVStHYTJ2RUVLY01jSVUyRgpvU2djUWdMYTk0aEpacGk3ZnNMdm1OQUxoT045UHdNMGM1dVJVejV4T0dGMUtCbWRSeEgvbUNOS2JKYjFRQm1HCkkwYitEUEdaTktXTU0xMzhIQXdoV0tkNjVoVHdYOWl4V3ZHMkh4TG1WQzg0L1BHT0tWQW9FNkpsYWFHdTlQVmkKdjlOSjVaZlZrcXdCd0hKbzZXdk9xVlA3SVFjZmg3d0drWm89Ci0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 86400  # one day
+  usages:
+  - client auth
+
+
+root@server:~/rbac# kubectl get csr
+NAME     AGE   SIGNERNAME                            REQUESTOR          REQUESTEDDURATION   CONDITION
+aneesh   5s    kubernetes.io/kube-apiserver-client   kubernetes-admin   <none>              Pending
+
+its status is pending approve it NOW
+
+root@server:~/rbac# kubectl certificate approve aneesh
+certificatesigningrequest.certificates.k8s.io/aneesh approved
+root@server:~/rbac# kubectl get csr
+NAME     AGE   SIGNERNAME                            REQUESTOR          REQUESTEDDURATION   CONDITION
+aneesh   85s   kubernetes.io/kube-apiserver-client   kubernetes-admin   <none>              Approved,Issued
+
+Create Certificate(.crt) file locally 
+
+kubectl get csr aneesh -o yaml
+copy certificate and decode it using base64
+
+echo LS0t....blabla..multiplelines....0tLS0tCg== | base64 -d > aneesh.crt
+
+root@server:~/rbac# ls
+aneesh.crt  aneesh.csr  aneesh.key  csr.yaml
+
+
+Check kubectl config view 
+root@server:~/rbac# kubectl config view
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://192.168.29.110:6443
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: kubernetes-admin
+  name: kubernetes-admin@kubernetes
+current-context: kubernetes-admin@kubernetes
+kind: Config
+preferences: {}
+users:
+- name: kubernetes-admin
+  user:
+    client-certificate-data: DATA+OMITTED
+    client-key-data: DATA+OMITTED
+
+
+set user in this file using following command
+
+kubectl config set-credentials aneesh --client-key=aneesh.key --client-certificate=aneesh.crt --embed-certs
+
+
+chekc now
+
+kubectl config view
+- name: aneesh
+  user:
+    client-certificate-data: DATA+OMITTED
+    client-key-data: DATA+OMITTED
+- name: kubernetes-admin
+  user:
+    client-certificate-data: DATA+OMITTED
+    client-key-data: DATA+OMITTED
+
+
+add contenxt for user aneesh
+kubectl config set-context test --user=aneesh --cluster=kubernetes 
+
+
+list context
+kubectl config get-contexts
+
+change context
+kubectl config use-context test
+
+change namespace 
+kubectl config set-context --current --namespace=devops
+

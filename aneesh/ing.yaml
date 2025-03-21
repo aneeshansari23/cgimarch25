@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mydep-ing
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "aneesh.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: mydep-svc
+            port:
+              number: 80
+  - host: "prakash.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: ppod
+            port:
+              number: 80
+

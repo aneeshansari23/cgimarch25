@@ -1,0 +1,195 @@
+    1  systemctl status crio
+    2  vi /etc/hostname 
+    3  init 6
+    4  export OS=xUbuntu_22.04
+    5  export CRIO_VERSION=1.24
+    6  export CRIO_VERSION=1.28
+    7  echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /"| sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+    8  echo "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$CRIO_VERSION/$OS/ /"|sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION.list
+    9  curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION/$OS/Release.key | sudo apt-key add -
+   10  curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | sudo apt-key add -
+   11  apt update && apt install cri-o cri-o-runc -y
+   12  free -h
+   13  kubeadm init 
+   14  systemctl start crio
+   15  kubeadm init 
+   16  mkdir -p $HOME/.kube
+   17  cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   18  vi .kube/config 
+   19  kubectl get nodes
+   20  ls
+   21  vi cni.sh
+   22  sh cni.sh 
+   23  cilium install --version 1.16.3
+   24  kubectl get nodes
+   25  kubectl get pods -n kube-system
+   26  kubectl get nodes
+   27  echo "source <(kubectl completion bash)" >> ~/.bashrc
+   28  source .bashrc 
+   29  kubectl get nodes 
+   30  kubectl run mypod --image nginx:latest --port 80
+   31  kubectl get pod
+   32  kubectl logs mypod
+   33  kubectl get pod
+   34  kubectl exec -it mypod -- ls
+   35  kubectl exec -it mypod -- cat /etc/hosts
+   36  kubectl exec -it mypod -- bash
+   37  kubectl get pod
+   38  vi pod.yaml
+   39  kubectl create -f pod.yaml 
+   40  kubectl get pod
+   41  kubectl describe pod apple
+   42  kubectl get pod
+   43  kubectl get pod -o wide 
+   44  kubectl get pod --show-labels 
+   45  kubectl get pod 
+   46  kubectl logs  apple -c con1
+   47  kubectl logs  apple -c con2
+   48  kubectl get pod 
+   49  kubectl exec -it apple -c con1 -- bash
+   50  kubectl exec -it apple -c con2 -- bash
+   51  vi pod-svc.yaml
+   52  ls
+   53  mkdir app
+   54  cp pod* app/
+   55  ls
+   56  cp pod.yaml pod-svc.yaml app/
+   57  cd app/
+   58  ls
+   59  vi pod
+   60  vi pod.yaml 
+   61  vi pod-svc.yaml 
+   62  kubectl create -f pod-svc.yaml 
+   63  kubectl get pods
+   64  kubectl get service
+   65  kubectl get svc
+   66  vi pod-svc.yaml 
+   67  vi pod.yaml 
+   68  vi pod-svc.yaml 
+   69  kubectl delete -f pod-svc.yaml 
+   70  kubectl create -f pod-svc.yaml 
+   71  kubectl get svc
+   72  kubectl delete -f pod.yaml 
+   73  vi pod.yaml 
+   74  kubectl create -f pod.yaml 
+   75  kubectl get pods
+   76  kubectl describe pod wordpress 
+   77  kubectl get pods
+   78  vi pod.yaml 
+   79  kubectl get svc
+   80  vi pod.yaml 
+   81  kubectl get pods
+   82  kubectl delete po mypod 
+   83  kubectl delete po wordpress 
+   84  kubectl api-resources 
+   85  kubectl get pods
+   86  kubectl get svc
+   87  kubectl delete service apple-svc 
+   88  kubectl get svc
+   89  cp pod.yaml wordpress.yaml
+   90  vi wordpress.yaml 
+   91  kubectl create -f wordpress.yaml 
+   92  kubectl get pods,svc
+   93  cp pod.yaml mysql.yaml
+   94  vi mysql.yaml 
+   95  kubectl create -f mysql.yaml 
+   96  kubectl get pods
+   97  kubectl get svc
+   98  kubectl get pods
+   99  kubectl get svc
+  100  kubectl get pod -o wide
+  101  kubectl describe pod wordpress
+  102  kubectl get pod 
+  103  kubectl describe pod wordpress
+  104  kubectl delete -f wordpress.yaml 
+  105  vi wordpress.yaml 
+  106  vi mysql.yaml 
+  107  vi wordpress.yaml 
+  108  vi mysql.yaml 
+  109  vi wordpress.yaml 
+  110  vi mysql.yaml 
+  111  vi wordpress.yaml 
+  112  kubectl create -f wordpress.yaml 
+  113  kucget pods
+  114  kubectl get pods
+  115  kubectl get svc
+  116  vi mysql.yaml 
+  117  kubectl get pods
+  118  kubectl delete -f .
+  119  kubectl get all
+  120  kubectl get pod,svc
+  121  vi rc.yaml
+  122  kubectl create -f rc.yaml
+  123  kubectl get replicationcontrollers 
+  124  kubectl get pods
+  125  kubectl get pod -o wide
+  126  kubectl expose replicationcontroller myrc --type NodePort --port 80 --dry-run=client -o yaml
+  127  kubectl expose replicationcontroller myrc --type NodePort --port 80 
+  128  kubectl get svc
+  129  kubectl get pods
+  130  kubectl logs myrc-bqncw
+  131  kubectl logs myrc-pg8cr
+  132  kubectl logs myrc-px6pj
+  133  kubectl get rc
+  134  kubectl get pods
+  135  kubectl scale replicationcontroller myrc --replicas 8
+  136  kubectl get rc
+  137  kubectl get pods
+  138  kubectl scale replicationcontroller myrc --replicas 3
+  139  kubectl get rc
+  140  kubectl get pods
+  141  kubectl delete replicationcontrollers myrc 
+  142  kubectl delete svc myrc 
+  143  vi rc.yaml 
+  144  cp rc.yaml rs.yaml
+  145  vi rs.yaml 
+  146  kubectl create -f rs.yaml 
+  147  kubectl get rs
+  148  kubectl get pods
+  149  kubectl scale replicaset myrs --replicas 7 
+  150  kubectl get rs
+  151  kubectl get pods
+  152  kubectl scale replicaset myrs --replicas 4
+  153  kubectl get pods
+  154  kubectl scale replicaset myrs --replicas 2
+  155  kubectl get pods
+  156  kubectl delete rs myrs 
+  157  kubectl get svc
+  158  vi rs
+  159  vi rs.yaml 
+  160  kubectl create deployment mydep --image nginx:latest --port 80 --dry-run=client -o yaml
+  161  kubectl create deployment mydep --image nginx:latest --port 80 --dry-run=client -o yaml > dep.yaml
+  162  vi dep.yaml 
+  163  kubectl create -f dep.yaml 
+  164  kubectl get deployments.apps 
+  165  kubectl get deploy
+  166  kubectl get deployment
+  167  kubectl get pods
+  168  kubectl get pods -o wide
+  169  kubectl get deploy
+  170  kubectl get rs
+  171  kubectl get pods
+  172  kubectl get deployment -o wide
+  173  kubectl set image deployment mydep con1=httpd:latest
+  174  kubectl get deploy -o wide
+  175  kubectl get rs
+  176  kubectl get pods
+  177  kubectl expose deployment mydep --type NodePort --port 80 
+  178  kubectl get svc
+  179  kubectl rollout history deployment mydep 
+  180  kubectl annotate deployments.apps mydep kubernetes.io/change-cause="updated con1 with image httpd"
+  181  kubectl rollout history deployment mydep 
+  182  kubectl rollout history deployment mydep --revision 1
+  183  kubectl rollout history deployment mydep --revision 2
+  184  kubectl rollout undo deployment mydep --to-revision 1
+  185  kubectl get pods
+  186  kubectl get rs
+  187  kubectl scale deployment mydep --replicas 8
+  188  kubectl get deployments.apps 
+  189  kubectl get pods
+  190  kubectl scale deployment mydep --replicas 2
+  191  kubectl get pods
+  192  kubectl get deployments.apps 
+  193  kubectl describe deployments.apps mydep 
+  194  ls
+  195  history > 19-march.txt

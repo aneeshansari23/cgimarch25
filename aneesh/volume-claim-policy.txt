@@ -1,0 +1,9 @@
+reclaim policies
+
+Retain: The PV will not be deleted; it will remain in the "Released" state and must be manually deleted or reused. This allows for data recovery or migration but requires manual intervention.
+
+Delete: The PV and the underlying storage asset (like an EBS volume in AWS) will be automatically deleted when the PVC is deleted. This is suitable for ephemeral workloads where data does not need to persist.
+
+Recycle (deprecated): This policy was used to scrub the volume before making it available again, but it has been deprecated in favor of more modern approaches like using dynamic provisioning with other reclaim policies.
+
+

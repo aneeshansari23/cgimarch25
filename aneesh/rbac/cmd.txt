@@ -1,0 +1,742 @@
+    1  systemctl status crio
+    2  vi /etc/hostname 
+    3  init 6
+    4  export OS=xUbuntu_22.04
+    5  export CRIO_VERSION=1.24
+    6  export CRIO_VERSION=1.28
+    7  echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /"| sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+    8  echo "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$CRIO_VERSION/$OS/ /"|sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION.list
+    9  curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION/$OS/Release.key | sudo apt-key add -
+   10  curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | sudo apt-key add -
+   11  apt update && apt install cri-o cri-o-runc -y
+   12  free -h
+   13  kubeadm init 
+   14  systemctl start crio
+   15  kubeadm init 
+   16  mkdir -p $HOME/.kube
+   17  cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   18  vi .kube/config 
+   19  kubectl get nodes
+   20  ls
+   21  vi cni.sh
+   22  sh cni.sh 
+   23  cilium install --version 1.16.3
+   24  kubectl get nodes
+   25  kubectl get pods -n kube-system
+   26  kubectl get nodes
+   27  echo "source <(kubectl completion bash)" >> ~/.bashrc
+   28  source .bashrc 
+   29  kubectl get nodes 
+   30  kubectl run mypod --image nginx:latest --port 80
+   31  kubectl get pod
+   32  kubectl logs mypod
+   33  kubectl get pod
+   34  kubectl exec -it mypod -- ls
+   35  kubectl exec -it mypod -- cat /etc/hosts
+   36  kubectl exec -it mypod -- bash
+   37  kubectl get pod
+   38  vi pod.yaml
+   39  kubectl create -f pod.yaml 
+   40  kubectl get pod
+   41  kubectl describe pod apple
+   42  kubectl get pod
+   43  kubectl get pod -o wide 
+   44  kubectl get pod --show-labels 
+   45  kubectl get pod 
+   46  kubectl logs  apple -c con1
+   47  kubectl logs  apple -c con2
+   48  kubectl get pod 
+   49  kubectl exec -it apple -c con1 -- bash
+   50  kubectl exec -it apple -c con2 -- bash
+   51  vi pod-svc.yaml
+   52  ls
+   53  mkdir app
+   54  cp pod* app/
+   55  ls
+   56  cp pod.yaml pod-svc.yaml app/
+   57  cd app/
+   58  ls
+   59  vi pod
+   60  vi pod.yaml 
+   61  vi pod-svc.yaml 
+   62  kubectl create -f pod-svc.yaml 
+   63  kubectl get pods
+   64  kubectl get service
+   65  kubectl get svc
+   66  vi pod-svc.yaml 
+   67  vi pod.yaml 
+   68  vi pod-svc.yaml 
+   69  kubectl delete -f pod-svc.yaml 
+   70  kubectl create -f pod-svc.yaml 
+   71  kubectl get svc
+   72  kubectl delete -f pod.yaml 
+   73  vi pod.yaml 
+   74  kubectl create -f pod.yaml 
+   75  kubectl get pods
+   76  kubectl describe pod wordpress 
+   77  kubectl get pods
+   78  vi pod.yaml 
+   79  kubectl get svc
+   80  vi pod.yaml 
+   81  kubectl get pods
+   82  kubectl delete po mypod 
+   83  kubectl delete po wordpress 
+   84  kubectl api-resources 
+   85  kubectl get pods
+   86  kubectl get svc
+   87  kubectl delete service apple-svc 
+   88  kubectl get svc
+   89  cp pod.yaml wordpress.yaml
+   90  vi wordpress.yaml 
+   91  kubectl create -f wordpress.yaml 
+   92  kubectl get pods,svc
+   93  cp pod.yaml mysql.yaml
+   94  vi mysql.yaml 
+   95  kubectl create -f mysql.yaml 
+   96  kubectl get pods
+   97  kubectl get svc
+   98  kubectl get pods
+   99  kubectl get svc
+  100  kubectl get pod -o wide
+  101  kubectl describe pod wordpress
+  102  kubectl get pod 
+  103  kubectl describe pod wordpress
+  104  kubectl delete -f wordpress.yaml 
+  105  vi wordpress.yaml 
+  106  vi mysql.yaml 
+  107  vi wordpress.yaml 
+  108  vi mysql.yaml 
+  109  vi wordpress.yaml 
+  110  vi mysql.yaml 
+  111  vi wordpress.yaml 
+  112  kubectl create -f wordpress.yaml 
+  113  kucget pods
+  114  kubectl get pods
+  115  kubectl get svc
+  116  vi mysql.yaml 
+  117  kubectl get pods
+  118  kubectl delete -f .
+  119  kubectl get all
+  120  kubectl get pod,svc
+  121  vi rc.yaml
+  122  kubectl create -f rc.yaml
+  123  kubectl get replicationcontrollers 
+  124  kubectl get pods
+  125  kubectl get pod -o wide
+  126  kubectl expose replicationcontroller myrc --type NodePort --port 80 --dry-run=client -o yaml
+  127  kubectl expose replicationcontroller myrc --type NodePort --port 80 
+  128  kubectl get svc
+  129  kubectl get pods
+  130  kubectl logs myrc-bqncw
+  131  kubectl logs myrc-pg8cr
+  132  kubectl logs myrc-px6pj
+  133  kubectl get rc
+  134  kubectl get pods
+  135  kubectl scale replicationcontroller myrc --replicas 8
+  136  kubectl get rc
+  137  kubectl get pods
+  138  kubectl scale replicationcontroller myrc --replicas 3
+  139  kubectl get rc
+  140  kubectl get pods
+  141  kubectl delete replicationcontrollers myrc 
+  142  kubectl delete svc myrc 
+  143  vi rc.yaml 
+  144  cp rc.yaml rs.yaml
+  145  vi rs.yaml 
+  146  kubectl create -f rs.yaml 
+  147  kubectl get rs
+  148  kubectl get pods
+  149  kubectl scale replicaset myrs --replicas 7 
+  150  kubectl get rs
+  151  kubectl get pods
+  152  kubectl scale replicaset myrs --replicas 4
+  153  kubectl get pods
+  154  kubectl scale replicaset myrs --replicas 2
+  155  kubectl get pods
+  156  kubectl delete rs myrs 
+  157  kubectl get svc
+  158  vi rs
+  159  vi rs.yaml 
+  160  kubectl create deployment mydep --image nginx:latest --port 80 --dry-run=client -o yaml
+  161  kubectl create deployment mydep --image nginx:latest --port 80 --dry-run=client -o yaml > dep.yaml
+  162  vi dep.yaml 
+  163  kubectl create -f dep.yaml 
+  164  kubectl get deployments.apps 
+  165  kubectl get deploy
+  166  kubectl get deployment
+  167  kubectl get pods
+  168  kubectl get pods -o wide
+  169  kubectl get deploy
+  170  kubectl get rs
+  171  kubectl get pods
+  172  kubectl get deployment -o wide
+  173  kubectl set image deployment mydep con1=httpd:latest
+  174  kubectl get deploy -o wide
+  175  kubectl get rs
+  176  kubectl get pods
+  177  kubectl expose deployment mydep --type NodePort --port 80 
+  178  kubectl get svc
+  179  kubectl rollout history deployment mydep 
+  180  kubectl annotate deployments.apps mydep kubernetes.io/change-cause="updated con1 with image httpd"
+  181  kubectl rollout history deployment mydep 
+  182  kubectl rollout history deployment mydep --revision 1
+  183  kubectl rollout history deployment mydep --revision 2
+  184  kubectl rollout undo deployment mydep --to-revision 1
+  185  kubectl get pods
+  186  kubectl get rs
+  187  kubectl scale deployment mydep --replicas 8
+  188  kubectl get deployments.apps 
+  189  kubectl get pods
+  190  kubectl scale deployment mydep --replicas 2
+  191  kubectl get pods
+  192  kubectl get deployments.apps 
+  193  kubectl describe deployments.apps mydep 
+  194  ls
+  195  history > 19-march.txt
+  196  cd ..
+  197  ls
+  198  cd /home/ubuntu/
+  199  mkdir app
+  200  cd app/
+  201  cp /root/app/*.yaml .
+  202  ls
+  203  kubectl get pods
+  204  systemctl status kubelet.service 
+  205  systemctl status crio
+  206  systemctl enab
+  207  systemctl start crio
+  208  systemctl status kubelet.service 
+  209  kubectl get nodes
+  210  kubectl get pods
+  211  kubectl get deployments.apps 
+  212  kubectl get pods
+  213  kubectl describe po mydep-8c7c776bd-mcrdz 
+  214  kubectl get pods
+  215  kubectl delete deploymen
+  216  cd app/
+  217  kubectl create -f dep.yaml 
+  218  kubectl get pods
+  219  kubectl describe pod mydep-8c7c776bd-c6fkz 
+  220  kubectl get pods
+  221  kubectl get deployments.apps 
+  222  history 
+  223  kubectl get pods
+  224  kubectl get deployments.apps 
+  225  #kubectl autoscale deployment mydep --
+  226  vi dep.yaml 
+  227  kubectl autoscale deployment mydep --min 2 --max 8 --cpu-percent 75 --dry-run=client -o yaml > hpa.yaml
+  228  ls
+  229  vi hpa.yaml 
+  230  kubectl autoscale deployment mydep --min 2 --max 8 --cpu-percent 75 
+  231  kubectl get hpa
+  232  kubectl get pods -n kube-system 
+  233  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+  234  kubectl get pods -n kube-system 
+  235  kubectl -n kube-system describe po metrics-server-75bf97fcc9-mtv4f 
+  236  kubectl get pods -n kube-system 
+  237  kubectl -n kube-system edit deployments.apps metrics-server 
+  238  kubectl get pods -n kube-system 
+  239  kubectl get hpa
+  240  vi adep.yaml
+  241  kubectl delete -f dep.yaml 
+  242  kubectl delete hpa mydep 
+  243  kubectl create -f adep.yaml 
+  244  kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
+  245  kubectl get pods
+  246  kubectl get deployments.apps 
+  247  kubectl get hpa
+  248  kubectl get pods
+  249  kubectl get hpa
+  250  kubectl get pods
+  251  kubectl get hpa
+  252  kubectl get pods
+  253  kubectl get hpa
+  254  kubectl get pods
+  255  kubectl run -i --tty load-generator --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
+  256  cd
+  257  cd app/
+  258  kubectl delete -f adep.yaml 
+  259  kubectl delete hpa php-apache 
+  260  vi dep.yaml 
+  261  kubectl create-f  dep.yaml 
+  262  kubectl create -f  dep.yaml 
+  263  kubectl  get pods
+  264  kubectl delete --force pod load-generator 
+  265  kubectl  get pods
+  266  kubectl get hpa
+  267  vi dep.yaml 
+  268  kubectl get hpa
+  269  kubectl  get pods
+  270  kubectl describe pod mydep-8c7c776bd-cfhqm 
+  271  vi dep.yaml 
+  272  kubectl delete -f dep.yaml 
+  273  kubectl create -f dep.yaml 
+  274  kubectl get pods
+  275  kubectl describe po mydep-5949f667bf-wsdck 
+  276  vi pod-svc.yaml 
+  277  kubectl get svc
+  278  kubectl get pods
+  279  kubectl scale deployment mydep --replicas 4
+  280  kubectl expose deployment mydep 
+  281  kubectl delete svc mydep 
+  282  kubectl expose deployment mydep 
+  283  kubectl get svc
+  284  kubectl get pod -o wide
+  285  kubectl get svc
+  286  kubectl describe svc mydep 
+  287  kubectl get pod -o wide
+  288  kubectl delete po mydep-5949f667bf-84phv 
+  289  kubectl get pod -o wide
+  290  kubectl describe svc mydep 
+  291  kubectl get pod -n kube-system -o wide
+  292  cp dep.yaml liveness-http.yaml
+  293  vi liveness-http.yaml 
+  294  kubectl create -f liveness-http.yaml 
+  295  kubectl get pods
+  296  kubectl delete deployments.apps mydep
+  297  kubectl get pods
+  298  kubectl describe pod mydeplive-656fb574dc-h55v9 
+  299  kubectl delete -f liveness-http.yaml 
+  300  vi liveness-http.yaml 
+  301  vi pod-svc.yaml 
+  302  vi liveness-http.yaml 
+  303  kubectl create -f liveness-http.yaml 
+  304  kubectl get pods
+  305  kubectl get pods -o wide
+  306  kubectl describe svc mydep-svc 
+  307  kubectl get pods 
+  308  kubectl describe po mydeplive-54f4cdc686-rspx9 
+  309  kubectl get pods 
+  310  kubectl describe po mydeplive-54f4cdc686-rspx9 
+  311  kubectl delete -f liveness-http.yaml 
+  312  kubectl get pods 
+  313  cp liveness-http.yaml liveness-tcp.yaml 
+  314  vi liveness-tcp.yaml 
+  315  kubectl create -f liveness-tcp.yaml 
+  316  kubectl get pods
+  317  kubectl describe pod mydeplive-66bc86974f-wg4rw 
+  318  kubectl delete -f liveness-tcp.yaml 
+  319  vi liveness-tcp.yaml 
+  320  cp liveness-tcp.yaml liveness-exec.yaml
+  321  vi liveness-exec.yaml 
+  322  kubectl create -f liveness-exec.yaml 
+  323  kubectl get pods
+  324  kubectl describe pod mydepexe-6dc7b9889-dp7cv 
+  325  kubectl delete -f liveness-exec.yaml 
+  326  vi liveness-http.yaml 
+  327  cp liveness-http.yaml readiness-http.yaml
+  328  vi readiness-http.yaml 
+  329  kubectl create -f readiness-http.yaml 
+  330  kubectl get pods
+  331  kubectl describe svc mydep
+  332  kubectl describe svc mydep-svc 
+  333  kubectl get pods -o wide
+  334  kubectl describe po mydeplive-85db754fb-ppwkl 
+  335  kubectl delete -f readiness-http.yaml 
+  336  vi readiness-http.yaml 
+  337  kubectl create -f readiness-http.yaml 
+  338  kubectl get pods
+  339  kubectl describe po mydeplive-d99989698-g42h5 
+  340  kubectl delete -f readiness-http.yaml 
+  341  vi readiness-http.yaml 
+  342  kubectl create -f readiness-http.yaml 
+  343  kubectl get pods
+  344  kubectl describe pod mydeplive-8b6665769-klz5g 
+  345  kubectl delete -f readiness-http.yaml 
+  346  vi readiness-http.yaml 
+  347  kubectl create -f readiness-http.yaml 
+  348  kubectl get pods
+  349  kubectl describe pod mydeplive-5c7895d8c6-9mdb4 
+  350  kubectl get pods
+  351  kubectl describe pod mydeplive-5c7895d8c6-9mdb4 
+  352  kubectl get pods
+  353  kubectl delete deployments.apps mydeplive 
+  354  kubectl get all
+  355  kubectl delete svc mydep mydep-svc 
+  356  kubectl get all
+  357  cp dep.yaml emptydir.yaml
+  358  vi emptydir.yaml 
+  359  kubectl create -f emptydir.yaml 
+  360  kubectl get pods
+  361  kubectl describe pod mydep-69d87c5589-cpcqz 
+  362  kubectl get pods
+  363  kubectl exec -it mydep-69d87c5589-cpcqz -c con1 -- bash
+  364  kubectl exec -it mydep-69d87c5589-cpcqz -c con2 -- bash
+  365  vi dep.yaml 
+  366  vi emptydir.yaml 
+  367  kubectl get po -o wide
+  368  kubectl get pods
+  369  kubectl delete deployments.apps mydep 
+  370  cd app/
+  371  cp dep.yaml hostpath.yaml
+  372  rm hostpath.yaml 
+  373  cp emptydir.yaml hostpath.yaml
+  374  vi hostpath.yaml 
+  375  kubectl create -f hostpath.yaml 
+  376  kubectl get pods
+  377  kubectl get pods -o wide
+  378  kubectl exec -it mydep-758bc5bdb5-gnmml -- bash
+  379  vi hostpath.yaml 
+  380  kubectl exec -it mydep-758bc5bdb5-gnmml -- bash
+  381  vi hostpath.yaml 
+  382  kubectl create -f hostpath.yaml 
+  383  kubectl delete -f hostpath.yaml 
+  384  kubectl create -f hostpath.yaml 
+  385  kubectl get pods
+  386  kubectl get pods -o wide
+  387  kubectl exec -it mydep-c55bb49bd-89vtm -- bash
+  388  kubectl get pods
+  389  kubectl delete -f hostpath.yaml 
+  390  kubectl get pods
+  391  kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.31/deploy/local-path-storage.yaml
+  392  kubectl get sc
+  393  vi pvc.yaml
+  394  kubectl create -f pvc.yaml
+  395  kubectl get pvc
+  396  kubectl describe pvc mypvc 
+  397  cp pod.yaml pvc-pod.yaml
+  398  vi pvc-pod.yaml 
+  399  vi pvc.yaml 
+  400  vi pvc-pod.yaml 
+  401  kubectl create -f pvc-pod.yaml 
+  402  vi pvc-pod.yaml 
+  403  kubectl create -f pvc-pod.yaml 
+  404  kubectl get pods
+  405  kubectl describe pod pvcpod 
+  406  kubectl get pvc
+  407  kubectl get pods
+  408  kubectl get sc
+  409  vi pvc.yaml 
+  410  kubectl get sc
+  411  kubectl describe sc local-path 
+  412  kubectl get sc
+  413  kubectl get pod -o wide
+  414  kubectl get pvc
+  415  kubectl get sc
+  416  vi volume-claim-policy.txt
+  417  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.0/deploy/static/provider/baremetal/deploy.yaml
+  418  kubectl get all -n ingress-nginx 
+  419  vi dep.yaml 
+  420  vi pod-svc.yaml 
+  421  vi dep.yaml 
+  422  kubectl create -f dep.yaml 
+  423  kubectl get pods
+  424  vi ing.yaml
+  425  kubectl get svc
+  426  vi ing.yaml
+  427  kubectl create -f ing.yaml 
+  428  kubectl get ingress
+  429  kubectl get all -n ingress-nginx 
+  430  vi dep.yaml 
+  431  vi ing.yaml 
+  432  vi wordpress.yaml 
+  433  vi dep.yaml 
+  434  cp dep.yaml wp.yaml
+  435  vi wordpress.yaml 
+  436  vi wp.yaml 
+  437  vi mysql.yaml 
+  438  kubectl delete -f dep.yaml 
+  439  kubectl create -f wp.yaml -f mysql.yaml 
+  440  kubectl get all
+  441  kubectl delete -f wp.yaml -f mysql.yaml 
+  442  vi wp.yaml 
+  443  kubectl create -f wp.yaml -f mysql.yaml 
+  444  kubectl get all
+  445  kubectl get pods
+  446  kubectl describe pod mydep-86b9c68fcf-j6sjs 
+  447  kubectl get pods
+  448  kubectl delete pod pvcpod
+  449  kubectl delete pvc mypvc 
+  450  kubectl get pods
+  451  kubectl get nodes
+  452  kubectl get pods
+  453  kubectl delete -f wp.yaml -f mysql.yaml 
+  454  kubectl get nodes
+  455  kubectl get pods
+  456  kubectl create -f mysql.yaml 
+  457  kubectl get pods -o wide
+  458  kubectl get nodes
+  459  kubectl describe nodes node1
+  460  kubectl get nodes
+  461  kubectl get pods
+  462  kubectl describe po mysql 
+  463  kubectl get pods
+  464  kubectl describe po mysql 
+  465  kubectl gt pvc
+  466  kubectl get pvc
+  467  kubectl get pv
+  468  kubectl get sc
+  469  kubectl delete -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.31/deploy/local-path-storage.yaml
+  470  kubectl get pods
+  471  kubectl create -f wp.yaml 
+  472  kubectl get pods
+  473  kubectl get svc
+  474  vi ing.yaml 
+  475  vi wp.yaml 
+  476  kubectl get all -n ingress-nginx 
+  477  vi ing.yaml 
+  478  kubectl get all -n ingress-nginx 
+  479  vi ing.yaml 
+  480  kubectl run ppod --image httpd:latest --port 80
+  481  kubectl expose po ppod --port 80
+  482  kubectl get svc
+  483  vi ing.yaml 
+  484  kubectl apply -f ing.yaml 
+  485  kubectl get ing
+  486  kubectl get all -n ingress-nginx 
+  487  kubectl get nodes
+  488  cd app/
+  489  ls
+  490  vi wp.yaml 
+  491  kubectl get cm
+  492  kubectl get configmaps 
+  493  kubectl get configmap
+  494  kubectl create configmap wpcm --from-literal WORDPRESS_DB_HOST=mysql-svc --from-literal WORDPRESS_DB_USER=root --from-literal WORDPRESS_DB_PASSWORD=test123 --from-literal WORDPRESS_DB_NAME=mydb --from-literal WORDPRESS_TABLE_PREFIX=wp_  --dry-run=client -o yaml 
+  495  kubectl create configmap wpcm --from-literal WORDPRESS_DB_HOST=mysql-svc --from-literal WORDPRESS_DB_USER=root --from-literal WORDPRESS_DB_PASSWORD=test123 --from-literal WORDPRESS_DB_NAME=mydb --from-literal WORDPRESS_TABLE_PREFIX=wp_  --dry-run=client -o yaml > wpcm.yaml
+  496  vi wpcm.yaml 
+  497  kubectl create -f wpcm.yaml 
+  498  kubectl get cm
+  499  kubectl get cm wpcm -o yaml
+  500  vi wp.yaml 
+  501  vi wpcm.yaml 
+  502  vi wp.yaml 
+  503  kubectl create -f wp.yaml 
+  504  kubectl get pods
+  505  kubectl delete -f .
+  506  kubectl get pods
+  507  kubectl delete pod ppod 
+  508  kubectl get pods
+  509  kubectl create -f wp.yaml 
+  510  kubectl get pods
+  511  kubectl describe pod mydep-55bf7b78df-6xmqn 
+  512  kubectl delete -f wp.yaml 
+  513  kubectl get cm
+  514  kubectl create -f wpcm.yaml 
+  515  kubectl create -f wp.yaml 
+  516  kubectl get pods
+  517  kubectl describe pod mydep-55bf7b78df-kwklq 
+  518  kubectl get pods
+  519  kubectl exec -it mydep-55bf7b78df-kwklq -- bash
+  520  kubectl delete -f wp.yaml 
+  521  cp wp.yaml wp-allenv.yaml
+  522  vi wpcm.yaml 
+  523  vi wp-allenv.yaml
+  524  kubectl get cm
+  525  vi wp-allenv.yaml
+  526  kubectl create -f wp-allenv.yaml
+  527  kubectl get pods
+  528  kubectl describe pod mydep-696996c6d4-b5ffh 
+  529  kubectl get pods
+  530  kubectl exec -it mydep-696996c6d4-b5ffh -- bash
+  531  vi wp-allenv.yaml 
+  532  vi wp.yaml 
+  533  cp wp.yaml nginx-cm.yaml
+  534  vi nginx-cm.yaml 
+  535  kubectl create -f nginx-cm.yaml 
+  536  kubectl delete -f nginx-cm.yaml 
+  537  kubectl create -f nginx-cm.yaml 
+  538  kubectl get pods
+  539  kubectl get svc
+  540  kubectl get pods
+  541  kubectl exec -it nginxapp-6c547b6cb9-rcx9k -- bash
+  542  kubectl get pods
+  543  kubectl delete pod mydep-696996c6d4-b5ffh 
+  544  kubectl get pods
+  545  vi nginx-cm.yaml 
+  546  vi index.html
+  547  kubectl create configmap nginxapp --from-file index.html --dry-run=client -o yaml
+  548  kubectl create configmap nginxapp --from-file index.html --dry-run=client -o yaml > nginxcm.yaml
+  549  vi nginxcm.yaml 
+  550  kubectl create -f nginxcm.yaml 
+  551  kubectl get cm
+  552  kubectl describe cm nginxapp 
+  553  vi nginx-cm.yaml 
+  554  kubectl get cm
+  555  vi nginx-cm.yaml 
+  556  kubectl create -f nginx-cm.yaml 
+  557  kubectl delete -f nginx-cm.yaml 
+  558  vi nginx-cm.yaml 
+  559  kubectl create -f nginx-cm.yaml 
+  560  kubectl get pods
+  561  kubectl describe po nginxapp-566b6f864c-wddjt 
+  562  vi nginx-cm.yaml 
+  563  #kubectl create secret generic mypass --from-literal password=test123
+  564  vi mysql.yaml 
+  565  kubectl create secret generic mypass --from-literal password=test123 --dry-run=client -o yaml
+  566  kubectl create secret generic mypass --from-literal password=test123 --dry-run=client -o yaml > mypass.yaml
+  567  vi mypass.yaml 
+  568  kubectl get secrets 
+  569  kubectl create -f mypass.yaml 
+  570  kubectl get secrets 
+  571  kubectl get secrets mypass -o yaml
+  572  kubectl describe secrets mypass 
+  573  echo "dGVzdDEyMw==" | base64 -d
+  574  vi mysql.yaml 
+  575  kubectl get pods
+  576  kubectl delete -f nginx-cm.yaml 
+  577  kubectl delete -f wp.yaml 
+  578  kubectl delete -f dep.yaml 
+  579  kubectl get pods
+  580  kubectl create -f mysql.yaml 
+  581  kubectl get pods
+  582  kubectl describe pod mysql 
+  583  kubectl delete -f mysql.yaml 
+  584  vi mysql.yaml 
+  585  cp mysql.yaml nginx-secret.yaml
+  586  vi nginx-secret.yaml 
+  587  vi app.cert
+  588  vi ~/.kube/config 
+  589  vi app.cert
+  590  kubectl create secret generic appcrt --from-file app.cert --dry-run=client -o yaml
+  591  echo "dGhpcyBpcyBzb21lIGRhdGEgLi4uLgoK" | base64 -d
+  592  kubectl create secret generic appcrt --from-file app.cert --dry-run=client -o yaml > nginxapp-secret.yaml
+  593  kubectl create secret generic appcrt --from-file app.cert 
+  594  kubectl get secrets 
+  595  kubectl get secrets appcrt -o yaml
+  596  ls
+  597  vi nginxapp-secret.yaml 
+  598  vi nginx-secret.yaml 
+  599  cp nginx-secret.yaml nginx-secret-vol.yaml
+  600  vi nginx-secret-vol.yaml 
+  601  kubectl get secrets 
+  602  vi nginx-secret-vol.yaml 
+  603  kubectl create -f nginx-secret-vol.yaml 
+  604  kubectl get pod
+  605  kubectl describe po appsecret-vol 
+  606  kubectl get pod
+  607  kubectl exec -it appsecret-vol -- bash
+  608  kubectl get secrets 
+  609  kubectl get secrets appcrt -o yaml
+  610  kubectl get namespaces 
+  611  kubectl -n kube-system get pods
+  612  kubectl get pods -n kube-system 
+  613  kubectl -n kube-system describe pod cilium-84mmr 
+  614  kubectl create namespace devops --dry-run=client -o yaml 
+  615  #kubectl create namespace devops --dry-run=client -o yaml 
+  616  mkdir rbac
+  617  cd rbac/
+  618  kubectl create namespace devops --dry-run=client -o yaml > namespace.yaml
+  619  vi namespace.yaml 
+  620  kubectl create -f namespace.yaml 
+  621  kubectl get ns
+  622  kubectl describe namespaces devops 
+  623  cp ../pod.yaml .
+  624  vi pod.yaml 
+  625  kubectl create -f pod.yaml 
+  626  kubectl -n devops get pod
+  627  kubectl describe namespaces devops 
+  628  kubectl -n devops describe po testpod 
+  629  kubectl describe namespaces devops 
+  630  vi limitrange.yaml
+  631  kubectl create  -f limitrange.yaml 
+  632  kubectl describe namespaces devops 
+  633  kubectl -n devops run app --image nginx --port 80
+  634  kubectl -n devops describe pod app 
+  635  kubectl describe namespaces devops 
+  636  vi resource-quota.yaml
+  637  kubectl create -f resource-quota.yaml 
+  638  kubectl get resourcequotas -n devops 
+  639  kubectl describe namespaces devops 
+  640  kubectl get cm
+  641  kubectl get cm -n devops 
+  642  kubectl create cm test --from-literal user=aneesh
+  643  kubectl create cm test --from-literal user=aneesh -n devops
+  644  kubectl describe namespaces devops 
+  645  kubectl -n devops create role devops-role --verb get,list,create,delete --resource pods,configmaps --dry-run=client -o yaml
+  646  kubectl -n devops create role devops-role --verb get,list,create,delete --resource pods,configmaps --dry-run=client -o yaml > role.yaml
+  647  vi role.yaml 
+  648  kubectl create -f role.yaml 
+  649  kubectl -n devops get role
+  650  kubectl -n devops get sa
+  651  kubectl -n devops create sa robo
+  652  kubectl -n devops get sa
+  653  kubectl get pods
+  654  kubectl describe po appsecret-vol 
+  655  kubectl -n devops get sa
+  656* kubectl delete -f pod.ya
+  657  kubectl -n devops get pods
+  658  kubectl -n devops delete apiservices.apiregistration.k8s.io 
+  659  kubectl -n devops delete pod app 
+  660  kubectl -n devops get pods
+  661  kubectl -n devops create rolebinding robo-rb --role devops-role --serviceaccount devops:robo --dry-run=client -o yaml
+  662  kubectl -n devops create rolebinding robo-rb --role devops-role --serviceaccount devops:robo --dry-run=client -o yaml > robo-rb.yaml
+  663  vi robo-rb.yaml 
+  664  kubectl create -f robo-rb.yaml 
+  665  kubectl -n devops get rolebindings.rbac.authorization.k8s.io 
+  666  vi pod.yaml 
+  667  kubectl create -f pod.yaml 
+  668  vi pod.yaml 
+  669  kubectl create -f pod.yaml 
+  670  kubectl -n devops get pods
+  671  kubectl -n devops describe po testpod 
+  672  kubectl -n devops get pods
+  673  kubectl -n devops auth can-i create pod --as devops:robo
+  674* vi role.y
+  675  kubectl -n devops auth can-i create pod --as devops
+  676  kubectl -n devops auth can-i create pod --user devops:robo
+  677  kubectl -n devops auth can-i create pod --as serviceaccount:devops:robo
+  678  kubectl -n devops auth can-i create pod --as=serviceaccount:devops:robo
+  679  kubectl -n devops get pod
+  680  kubectl  -n devops exec -it testpod -- bash
+  681  kubectl -n devops auth can-i create pod --as=system:serviceaccount:devops:robo
+  682  kubectl -n devops auth can-i create deployment --as=system:serviceaccount:devops:robo
+  683  kubectl -n devops auth can-i list deployment --as=system:serviceaccount:devops:robo
+  684  kubectl -n devops auth can-i list pod --as=system:serviceaccount:devops:robo
+  685  adduser aneesh
+  686  vi ~/.kube/config 
+  687  ls
+  688  kubectl create rolebinding devops-aneesh --role devops-role --user aneesh --dry-run=client -o yaml 
+  689  kubectl create rolebinding devops-aneesh --role devops-role --user aneesh --dry-run=client -o yaml  > rb-aneesh.yaml
+  690  vi rb-aneesh.yaml 
+  691  kubectl -n devops create rolebinding devops-aneesh --role devops-role --user aneesh > rb-aneesh.yaml 
+  692  kubectl -n devops create rolebinding devops-aneesh --role devops-role --user aneesh
+  693  kubectl -n devops get rolebindings.rbac.authorization.k8s.io 
+  694  cd /home/aneesh/
+  695  mkdir .certs
+  696  cd .certs/
+  697  openssl genrsa -out aneesh.key 2048
+  698  ls
+  699  openssl req -new -key aneesh.key -out aneesh.csr
+  700  ls
+  701  cat aneesh.csr 
+  702  cd -
+  703  cd ~/app/rbac/
+  704  ls
+  705  vi csr.yaml
+  706  cd /home/aneesh/.certs/
+  707  ls
+  708  cat aneesh.csr 
+  709  cat aneesh.csr | base64 -w 0
+  710  cd -
+  711  vi csr.yaml 
+  712  kubectl create  -f csr.yaml 
+  713  kubectl get csr
+  714  kubectl certificate approve aneesh
+  715  kubectl get csr
+  716  kubectl get csr aneesh -o yaml
+  717  echo "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURPekNDQWlPZ0F3SUJBZ0lRWVJhZDZwc2NwOTZyVjYybFVKL3orREFOQmdrcWhraUc5dzBCQVFzRkFEQVYKTVJNd0VRWURWUVFERXdwcmRXSmxjbTVsZEdWek1CNFhEVEkxTURNeU1URXhNVFV6T0ZvWERUSTFNRE15TWpFeApNVFV6T0Zvd1ZqRUxNQWtHQTFVRUJoTUNRVlV4RXpBUkJnTlZCQWdUQ2xOdmJXVXRVM1JoZEdVeElUQWZCZ05WCkJBb1RHRWx1ZEdWeWJtVjBJRmRwWkdkcGRITWdVSFI1SUV4MFpERVBNQTBHQTFVRUF4TUdZVzVsWlhOb01JSUIKSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ0tDQVFFQXR4dlJsTytjRG9DbkNMdVBWTGhHaGlCTApxb3ZLYndodUY4dFZHYTlob1U3MzNGQ3lxdTlRY0JOWmwzaC8yM0tmUTdZeVRLREdMVG5DMGkyTWlIQ1JlTjBTCmFIeXlFdThsYVEwSFIrTVFKNElGcVhQNDB2WGF5TE0yTzhYYnAxcUY1RzZkTFB6dm1qQjlpNjAvdjZmWHNVcjUKa3I0UzB2RkRTSlBEUVdGZkY1dU9sclFjVkZVcVZZYXFNS1JqdVpXa0pLdS9iZUZNdmhLQUVuTmluYm5LL2VDcQpsTStFdkozUWdVdzVqUWlSQ0tIdDNCaVhaSE9NRjhrU2M2MVlqZUpBbVBjaFVZZHVITFdYU0pIbEZjTXcwR3FwCjJNWS9GNnJYWXdRNE50YXc1THVvY2ovS3E5cWZYWnRaSXF0Y2FPL0ttWTA1WC9MTHJONVcyaHYzZHViNTRRSUQKQVFBQm8wWXdSREFUQmdOVkhTVUVEREFLQmdnckJnRUZCUWNEQWpBTUJnTlZIUk1CQWY4RUFqQUFNQjhHQTFVZApJd1FZTUJhQUZPUlpQT2hZb3F4MWE2MXhFU1E2UWRMRnVqbnNNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUF5CjkxY3Y3cHlYMHF1N09oQXlwWVpoMk9XUkVnUWZFaXUyaWFDL2xTRWd4dVo2OFBJeUo1ZGw2Wk05QzFicWZ2NU0KaVVwLytYZFVtQXFpVkV1ZzlTQXFoTmpYR3UyZEljVzBINjlOWDNIRFRzd0g3cmZ2YVFxeXBscE9CWW53d0RacApRSUZmcXBrNktJMDF6R2xiSzFVSTJpcnRCTlduWWtDVGtnYmlZSWNndFluYU1xNnhnKzNIYk0wQzJpSUVEak9QCkhWZ1YxanRGT2V1UXZTY1Ribi9nbkE1SU5pYWNETjhjSkozWDE5bUpiRWg1dnQ2d3lzelRBYkUyVFpnWDZyY3UKYVdONGNSZEs4cVRVaDdTRHdKbXJsazJ3cStiTkx3YVd2L2toa2l6MHZONFJUUTZtT0VmbU9oMmhXTHI0SDR1eApzN2tmVDhZem5jNDd1UEFQVFNkZgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==" | base64 -d > /home/aneesh/.certs/aneesh.crt
+  718  cd -
+  719  ls
+  720  cat aneesh.crt 
+  721  cd ..
+  722  ll
+  723  chown -R aneesh:aneesh .certs/
+  724  ll .certs/
+  725  vi ~/.kube/c
+  726  vi ~/.kube/config 
+  727  history 
+  728  history > cmd.txt
+  729  vi cmd.txt 
+  730  kubectl get csr
+  731  kubectl get csr aneesh -o yaml
+  732  cd /etc/kubernetes/pki/
+  733  ls
+  734  cd -
+  735  cd
+  736  cd app/rbac/
+  737  vi rbac.txt
+  738  ls 
+  739  cd ..
+  740  ls
+  741  cd rbac/
+  742  history > cmd.txt
